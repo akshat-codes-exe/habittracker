@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111111">
+  <link rel="apple-touch-icon" href="icon-512.png">
+</head>
+<body>
+  <div id="root">
+    <!-- Application Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="app-logo">
+          <i data-lucide="refresh-cw" style="width: 18px; height: 18px; color: white;"></i>
+        </div>
+        <div class="app-title-group">
+          <h1 class="app-title">Habit Tracker</h1>
+          <button class="btn-text-small" id="guide-open-btn" style="padding:0; text-decoration:underline;">Guide & Info</button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <button class="btn-todo" id="stats-toggle-btn">
+          <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i> Analytics
+        </button>
+        <button class="btn-todo" id="todo-toggle-btn">
+          <i data-lucide="check-square" style="width: 16px; height: 16px;"></i> To-Do
+          <span class="todo-badge" id="todo-badge" style="display:none;">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Table/Grid -->
+    <main class="main-content">
+      <div class="tracker-wrapper">
+        <!-- Rendered via JS -->
+        <div class="tracker-grid" id="tracker-grid"></div>
+      </div>
+    </main>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>Immediate To-Dos</h2>
+        <button class="btn-icon" id="sidebar-close-btn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="sidebar-content">
+        <form class="add-todo-form" id="add-todo-form">
+          <input type="text" id="new-todo-input" placeholder="What needs to be done?" required class="dark-input">
+          <button type="submit" class="btn-primary">Add</button>
+        </form>
+        <div class="todo-list" id="todo-list">
+          <!-- Rendered via JS -->
+        </div>
+        <button class="btn-primary" id="clear-completed-todos-btn" style="display:none; margin-top: auto; background: var(--border-color); color: var(--text-primary);">
+          Clear Completed
+        </button>
+      </div>
+    </aside>
+
+    <!-- Left Sidebar (Stats) -->
+    <aside class="sidebar sidebar-left" id="sidebar-stats">
+      <div class="sidebar-header">
+        <h2>My Performance</h2>
+        <button class="btn-icon" id="sidebar-stats-close-btn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="sidebar-content" id="stats-content">
+        <!-- Rendered via JS -->
+      </div>
+      <div style="display:flex;">
+        <button class="btn-primary" id="restart-progress-btn" style="background:#450a0a; color:#fca5a5; flex:1; border-top:1px solid #7f1d1d; border-right:1px solid #7f1d1d; border-radius:0; padding:1.2rem; text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; cursor:pointer;" title="Wipe all tracked dates and restart from Day 1 today">
+          <i data-lucide="rotate-ccw" style="width:14px; height:14px; margin-right:6px;"></i> Restart
+        </button>
+        <button class="btn-primary" id="export-backup-btn" style="background:#0f172a; color:#38bdf8; flex:1; border-top:1px solid #1e293b; border-radius:0; padding:1.2rem; text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; cursor:pointer;" title="Download all data securely to your computer">
+          <i data-lucide="download" style="width:14px; height:14px; margin-right:6px;"></i> Backup Data
+        </button>
+      </div>
+    </aside>
+
+    <!-- Info & Guide Modal -->
+    <div class="auth-overlay" id="info-overlay">
+      <div class="auth-modal" style="max-width: 500px; padding: 2rem;">
+        <h2 style="font-size:1.5rem; margin-bottom: 1.5rem;">How it Works</h2>
+        
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #7f1d1d; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
+          <h3 style="color:#fca5a5; font-size:0.85rem; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+            <i data-lucide="shield-alert" style="width:16px; height:16px;"></i> SECURE OFFLINE STORAGE
+          </h3>
+          <p style="font-size:0.8rem; color:#f87171; line-height:1.4;">
+            This tracker operates completely isolated in your browser. No cloud databases are used. <strong>Warning:</strong> If you clear your browser cache/cookies, your tracking data will be lost. Use the <strong>Backup Data</strong> button in Analytics often to save your progress locally.
+          </p>
+        </div>
+        
+        <h3 style="font-size:1rem; margin-bottom:0.8rem; color:var(--text-primary);">Features</h3>
+        <ul style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; padding-left:1.2rem; margin-bottom:2rem;">
+          <li><strong>Drag & Drop:</strong> Reorder your habits by clicking their headers and dragging.</li>
+          <li><strong>Custom Colors:</strong> Click the palette icon next to a habit to theme it.</li>
+          <li><strong>Streaks:</strong> Keep unbroken checkmarks to ignite streak flames!</li>
+          <li><strong>Infinite Grid:</strong> Simply scroll down. Once you approach Day 30, the grid infinitely generates new days.</li>
+          <li><strong>Lifetime Analytics:</strong> The heatmap and tracking distributions scale automatically to track your entire lifetime.</li>
+          <li><strong>Daily Journal:</strong> The massive right column is for your end-of-day thoughts.</li>
+        </ul>
+        
+        <button class="btn-primary" id="guide-close-btn" style="width:100%; padding: 0.8rem;">Got it, let's start</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Standard script to avoid ES Module CORS blocking on File:// -->
+  <script src="app.js"></script>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
