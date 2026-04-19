@@ -84,12 +84,16 @@
         <!-- Rendered via JS -->
       </div>
       <div style="display:flex;">
-        <button class="btn-primary" id="restart-progress-btn" style="background:#450a0a; color:#fca5a5; flex:1; border-top:1px solid #7f1d1d; border-right:1px solid #7f1d1d; border-radius:0; padding:1.2rem; text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; cursor:pointer;" title="Wipe all tracked dates and restart from Day 1 today">
-          <i data-lucide="rotate-ccw" style="width:14px; height:14px; margin-right:6px;"></i> Restart
+        <button class="btn-primary" id="restart-progress-btn" style="background:#450a0a; color:#fca5a5; flex:1; border-top:1px solid #7f1d1d; border-right:1px solid #7f1d1d; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; cursor:pointer;" title="Wipe all tracked dates and restart from Day 1 today">
+          <i data-lucide="rotate-ccw" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Wipe
         </button>
-        <button class="btn-primary" id="export-backup-btn" style="background:#0f172a; color:#38bdf8; flex:1; border-top:1px solid #1e293b; border-radius:0; padding:1.2rem; text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; cursor:pointer;" title="Download all data securely to your computer">
-          <i data-lucide="download" style="width:14px; height:14px; margin-right:6px;"></i> Backup Data
+        <button class="btn-primary" id="export-backup-btn" style="background:#0f172a; color:#38bdf8; flex:1; border-top:1px solid #1e293b; border-right:1px solid #1e293b; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; cursor:pointer;" title="Download all data securely to your computer">
+          <i data-lucide="download" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Save Data
         </button>
+        <button class="btn-primary" id="import-backup-btn" style="background:#14532d; color:#6ee7b7; flex:1; border-top:1px solid #064e3b; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; cursor:pointer;" title="Restore tracking history from a JSON backup">
+          <i data-lucide="upload" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Load Data
+        </button>
+        <input type="file" id="import-file-input" accept=".json" style="display:none;">
       </div>
     </aside>
 

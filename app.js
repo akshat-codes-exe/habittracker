@@ -680,6 +680,38 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const importInput = document.getElementById('import-file-input');
+  const importBtn = document.getElementById('import-backup-btn');
+  if (importBtn && importInput) {
+    importBtn.addEventListener('click', () => importInput.click());
+    
+    importInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          if (data.habits) habits = data.habits;
+          if (data.progress) progress = data.progress;
+          if (data.dailyNotes) dailyNotes = data.dailyNotes;
+          if (data.todos) todos = data.todos;
+          if (data.startDate) appStartDate = new Date(data.startDate);
+          
+          saveData();
+          loadData();
+          alert("Backup successfully restored! Welcome back.");
+          document.getElementById('sidebar-stats').classList.remove('open');
+          document.getElementById('sidebar-overlay').classList.remove('open');
+        } catch (err) {
+          alert("Error parsing backup formatting. Invalid JSON document.");
+        }
+      };
+      reader.readAsText(file);
+      importInput.value = '';
+    });
+  }
+
   const guideOpenBtn = document.getElementById('guide-open-btn');
   if (guideOpenBtn) {
     guideOpenBtn.addEventListener('click', () => {
