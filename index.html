@@ -80,20 +80,36 @@
           <i data-lucide="x"></i>
         </button>
       </div>
-      <div class="sidebar-content" id="stats-content">
-        <!-- Rendered via JS -->
-      </div>
-      <div style="display:flex;">
-        <button class="btn-primary" id="restart-progress-btn" style="background:#450a0a; color:#fca5a5; flex:1; border-top:1px solid #7f1d1d; border-right:1px solid #7f1d1d; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; cursor:pointer;" title="Wipe all tracked dates and restart from Day 1 today">
-          <i data-lucide="rotate-ccw" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Wipe
-        </button>
-        <button class="btn-primary" id="export-backup-btn" style="background:#0f172a; color:#38bdf8; flex:1; border-top:1px solid #1e293b; border-right:1px solid #1e293b; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; cursor:pointer;" title="Download all data securely to your computer">
-          <i data-lucide="download" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Save Data
-        </button>
-        <button class="btn-primary" id="import-backup-btn" style="background:#14532d; color:#6ee7b7; flex:1; border-top:1px solid #064e3b; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; cursor:pointer;" title="Restore tracking history from a JSON backup">
-          <i data-lucide="upload" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Load Data
-        </button>
-        <input type="file" id="import-file-input" accept=".json" style="display:none;">
+      <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+        <div class="sidebar-content" id="stats-content" style="flex:1; overflow-y:visible; padding-bottom:0;">
+          <!-- Rendered via JS -->
+        </div>
+        <!-- Export info message -->
+        <div style="padding: 0.75rem 1rem; background: rgba(16,185,129,0.07); border-top: 1px solid #1a2e24; display: flex; align-items: flex-start; gap: 0.6rem; flex-shrink:0;">
+          <i data-lucide="info" style="width:14px; height:14px; color:#10b981; flex-shrink:0; margin-top:2px;"></i>
+          <p style="font-size:0.72rem; color:#6ee7b7; line-height:1.5; margin:0;">
+            <strong>Want to restore your data later?</strong> Use <em>Save Backup (JSON)</em> — it's the only format you can re-import into the tracker.
+            Excel &amp; PDF exports are for viewing and sharing only.
+          </p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; flex-shrink:0;">
+          <button class="btn-primary" id="restart-progress-btn" style="background:#450a0a; color:#fca5a5; flex:1 1 50%; border-top:1px solid #7f1d1d; border-right:1px solid #7f1d1d; border-bottom:1px solid #7f1d1d; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.7rem; letter-spacing:1px; cursor:pointer;" title="Wipe all tracked dates and restart from Day 1">
+            <i data-lucide="rotate-ccw" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Wipe Data
+          </button>
+          <button class="btn-primary" id="export-csv-btn" style="background:#064e3b; color:#34d399; flex:1 1 50%; border-top:1px solid #065f46; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.7rem; letter-spacing:1px; cursor:pointer;" title="Export tracking data as an Excel-compatible CSV file">
+            <i data-lucide="file-spreadsheet" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Export Excel
+          </button>
+          <button class="btn-primary" id="export-pdf-btn" style="background:#1c1208; color:#fbbf24; flex:1 1 50%; border-right:1px solid #2d1f08; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.7rem; letter-spacing:1px; cursor:pointer;" title="Export a printable PDF report of your habit data">
+            <i data-lucide="file-text" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Export PDF
+          </button>
+          <button class="btn-primary" id="export-backup-btn" style="background:#0f172a; color:#38bdf8; flex:1 1 50%; border-right:1px solid #1e293b; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.7rem; letter-spacing:1px; cursor:pointer;" title="Save backup as JSON. This JSON file can be used to import and restore your data later!">
+            <i data-lucide="download" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Save Backup
+          </button>
+          <button class="btn-primary" id="import-backup-btn" style="background:#1e1b4b; color:#a78bfa; flex:1 1 50%; border-radius:0; padding:1.2rem 0; text-transform:uppercase; font-size:0.7rem; letter-spacing:1px; cursor:pointer;" title="Import tracking history from a JSON backup">
+            <i data-lucide="upload" style="width:14px; height:14px; display:block; margin:0 auto 4px;"></i> Load Backup
+          </button>
+          <input type="file" id="import-file-input" accept=".json" style="display:none;">
+        </div>
       </div>
     </aside>
 

@@ -666,6 +666,165 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ── CSV / Excel Export ───────────────────────────────────────────────────────
+  const exportCsvBtn = document.getElementById('export-csv-btn');
+  if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+      const headers = ['Day', 'Calendar Date', ...habits.map(h => h.name), 'Daily Note', 'Progress %'];
+      const rows = [headers];
+
+      dates.forEach((date, index) => {
+        let calDateStr = '';
+        if (appStartDate) {
+          const d = new Date(appStartDate.getTime());
+          d.setDate(d.getDate() + index);
+          calDateStr = d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        let doneCount = 0;
+        const habitCells = habits.map(h => {
+          const state = progress[`${h.id}_${date.id}`] || STATE_EMPTY;
+          if (state === STATE_DONE) { doneCount++; return 'Done'; }
+          if (state === STATE_MISSED) return 'Missed';
+          return '';
+        });
+
+        const pct = habits.length > 0 ? Math.round((doneCount / habits.length) * 100) + '%' : 'N/A';
+        const note = (dailyNotes[date.id] || '').replace(/"/g, '""'); // escape quotes
+        rows.push([date.display, calDateStr, ...habitCells, `"${note}"`, pct]);
+      });
+
+      const csvContent = rows.map(r => r.join(',')).join('\n');
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // BOM for Excel UTF-8
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'habittracker_' + new Date().toISOString().split('T')[0] + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  // ── PDF Export (print window) ────────────────────────────────────────────────
+  const exportPdfBtn = document.getElementById('export-pdf-btn');
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener('click', () => {
+      const dateStr = appStartDate ? appStartDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown';
+      const today = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      // Build summary stats
+      let totalDone = 0, totalMissed = 0;
+      const habitRows = habits.map(h => {
+        let cDone = 0, cMissed = 0;
+        dates.forEach(date => {
+          const st = progress[`${h.id}_${date.id}`];
+          if (st === STATE_DONE) cDone++;
+          if (st === STATE_MISSED) cMissed++;
+        });
+        totalDone += cDone;
+        totalMissed += cMissed;
+        const rate = (cDone + cMissed) > 0 ? Math.round((cDone / (cDone + cMissed)) * 100) : 0;
+        return { name: h.name, done: cDone, missed: cMissed, rate };
+      });
+
+      // Build data table rows (only show days with some activity for PDF brevity)
+      let tableRows = '';
+      dates.forEach((date, index) => {
+        let hasActivity = habits.some(h => progress[`${h.id}_${date.id}`]);
+        if (!hasActivity) return; // skip empty days in PDF to keep it manageable
+
+        let calDateStr = '';
+        if (appStartDate) {
+          const d = new Date(appStartDate.getTime());
+          d.setDate(d.getDate() + index);
+          calDateStr = d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+        }
+
+        let doneCount = 0;
+        const cells = habits.map(h => {
+          const st = progress[`${h.id}_${date.id}`] || STATE_EMPTY;
+          if (st === STATE_DONE) { doneCount++; return `<td style="color:#10b981;text-align:center;font-weight:600;">✓</td>`; }
+          if (st === STATE_MISSED) return `<td style="color:#ef4444;text-align:center;">✗</td>`;
+          return `<td style="color:#aaa;text-align:center;">–</td>`;
+        }).join('');
+        const pct = habits.length > 0 ? Math.round((doneCount / habits.length) * 100) : 0;
+        const rowBg = pct >= 80 ? '#f0fdf4' : pct >= 40 ? '#fefce8' : '#fff5f5';
+        tableRows += `<tr style="background:${rowBg};">
+          <td style="font-weight:600;padding:4px 8px;">${date.display}</td>
+          <td style="color:#555;padding:4px 8px;">${calDateStr}</td>
+          ${cells}
+          <td style="font-weight:700;text-align:center;padding:4px 8px;">${pct}%</td>
+        </tr>`;
+      });
+
+      const summaryRows = habitRows.map(h => {
+        const bar = `<div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px;display:inline-block;vertical-align:middle;overflow:hidden;">
+          <div style="background:#10b981;height:100%;width:${h.rate}%;"></div></div>`;
+        return `<tr>
+          <td style="padding:6px 10px;font-weight:500;">${h.name}</td>
+          <td style="padding:6px 10px;color:#10b981;font-weight:600;">${h.done}</td>
+          <td style="padding:6px 10px;color:#ef4444;font-weight:600;">${h.missed}</td>
+          <td style="padding:6px 10px;text-align:center;">${bar} <strong>${h.rate}%</strong></td>
+        </tr>`;
+      }).join('');
+
+      const habitHeaders = habits.map(h => `<th style="padding:4px 6px;max-width:80px;word-wrap:break-word;">${h.name}</th>`).join('');
+
+      const printWin = window.open('', '_blank', 'width=1000,height=750');
+      printWin.document.write(`<!DOCTYPE html><html><head>
+        <title>Habit Tracker Report – ${today}</title>
+        <meta charset="UTF-8">
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: -apple-system, Arial, sans-serif; color: #111; padding: 2rem; background: #fff; font-size: 13px; }
+          h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; color: #111; }
+          h2 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+          .meta { font-size: 0.8rem; color: #666; margin-top: 4px; }
+          .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; margin: 0 4px; }
+          .done-badge { background: #d1fae5; color: #065f46; }
+          .missed-badge { background: #fee2e2; color: #991b1b; }
+          table { width: 100%; border-collapse: collapse; font-size: 12px; }
+          th { background: #f3f4f6; padding: 6px 8px; text-align: left; font-weight: 700; color: #374151; border: 1px solid #e5e7eb; }
+          td { border: 1px solid #e5e7eb; }
+          .note { margin-top: 1.5rem; padding: 0.75rem 1rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: 0.78rem; color: #92400e; }
+          @media print { body { padding: 1rem; } .no-print { display: none; } }
+        </style>
+      </head><body>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;">
+          <div>
+            <h1>📊 Habit Tracker Report</h1>
+            <p class="meta">Started: ${dateStr} &nbsp;·&nbsp; Exported: ${today} &nbsp;·&nbsp;
+              <span class="badge done-badge">✓ ${totalDone} Done</span>
+              <span class="badge missed-badge">✗ ${totalMissed} Missed</span>
+            </p>
+          </div>
+          <button class="no-print" onclick="window.print()" style="padding:0.5rem 1.2rem;background:#111;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;font-weight:600;">🖨 Print / Save PDF</button>
+        </div>
+
+        <h2>Habit Summary</h2>
+        <table>
+          <thead><tr><th>Habit</th><th>Done</th><th>Missed</th><th>Success Rate</th></tr></thead>
+          <tbody>${summaryRows || '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#999;">No habits tracked yet.</td></tr>'}</tbody>
+        </table>
+
+        <h2>Day-by-Day Breakdown <span style="font-weight:400;font-size:0.8rem;color:#666;">(only days with activity shown)</span></h2>
+        <table>
+          <thead><tr><th>Day</th><th>Date</th>${habitHeaders}<th>Progress</th></tr></thead>
+          <tbody>${tableRows || '<tr><td colspan="${habits.length + 3}" style="text-align:center;padding:1rem;color:#999;">No activity logged yet.</td></tr>'}</tbody>
+        </table>
+
+        <div class="note">
+          💡 <strong>Note:</strong> This PDF is for viewing &amp; sharing only. To restore your data in the Habit Tracker app, always keep a <strong>JSON backup</strong> (Save Backup button in Analytics).
+        </div>
+      </body></html>`);
+      printWin.document.close();
+      printWin.focus();
+    });
+  }
+
+  // ── JSON Backup Export ───────────────────────────────────────────────────────
   const exportBtn = document.getElementById('export-backup-btn');
   if (exportBtn) {
     exportBtn.addEventListener('click', () => {
