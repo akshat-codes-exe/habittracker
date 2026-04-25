@@ -1,10 +1,11 @@
 # Premium Habit Tracker 🔥
-<img width="1366" height="649" alt="image" src="https://github.com/user-attachments/assets/f3cacb4c-683a-4c49-8481-8b259e01d3f0" />
-<img width="1366" height="646" alt="image" src="https://github.com/user-attachments/assets/567d54f0-7194-4d82-b0e5-d8388d3b6ce0" />
-<img width="1366" height="638" alt="Screenshot (556)" src="https://github.com/user-attachments/assets/b7664408-7167-44d5-9608-9a0272622c37" />
-<img width="1366" height="631" alt="image" src="https://github.com/user-attachments/assets/6cb136be-b38b-406c-92fe-9760f740592c" />
+### 📸 App Showcase
 
-
+| Dashboard & Tracking | Deep Analytics |
+|:---:|:---:|
+| ![Main]<img width="1366" height="649" alt="Screenshot (554)" src="https://github.com/user-attachments/assets/16d3d2d9-da20-480c-9e66-6465f229f752" /> | ![Analytics]<img width="1366" height="646" alt="Screenshot (555)" src="https://github.com/user-attachments/assets/51722fac-8093-4395-b071-028b034565e4" />|
+| **Immediate To-Dos** | **Data Management** |
+| ![To-Do]<img width="1366" height="631" alt="Screenshot (558)" src="https://github.com/user-attachments/assets/a2eb3a17-b1a7-469f-ba9b-c45225a8baa8" /> | ![Export]<img width="1366" height="638" alt="Screenshot (556)" src="https://github.com/user-attachments/assets/621eae13-6f82-4297-87ca-5d682fe8a57f" />|
 
 
 
