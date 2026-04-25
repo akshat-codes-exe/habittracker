@@ -37,8 +37,7 @@ A modern, highly-polished, offline-first web application designed to track the i
 
 Because everything is calculated in the browser, deployment is instantaneous.
 
-1.  **Clone this repository:**<img width="1366" height="649" alt="image" src="https://github.com/user-attachments/assets/4c5fe874-ad9f-4c59-bd48-240d2d438ce6" />
-
+1.  **Clone this repository:**
 2.  **Run the App:** Open `index.html` directly in any modern web browser.
 3.  **Customize:** Click on the default "Ignite the Journey" habit to change its color or rename it.
 
